@@ -1,0 +1,55 @@
+% 2D Steady-State Conduction in a Copper Plate
+
+% Define parameters
+Lx = 0.1; % Length of the plate in x-direction (m)
+Ly = 0.1; % Length of the plate in y-direction (m)
+Nx = 50;  % Number of nodes in x-direction
+Ny = 50;  % Number of nodes in y-direction
+dx = Lx / (Nx - 1); % Grid spacing in x-direction
+dy = Ly / (Ny - 1); % Grid spacing in y-direction
+
+% Material properties for copper
+k = 400; % Thermal conductivity (W/mK)
+
+% Initialize temperature matrix
+T = zeros(Nx, Ny);
+
+% Boundary conditions
+T_left = 100;  % Temperature at the left boundary (°C)
+T_right = 200; % Temperature at the right boundary (°C)
+T_top = 150;   % Temperature at the top boundary (°C)
+T_bottom = 50;  % Temperature at the bottom boundary (°C)
+
+% Apply boundary conditions
+T(:, 1) = T_bottom;
+T(:, end) = T_top;
+T(1, :) = T_left;
+T(end, :) = T_right;
+
+% Convergence criteria
+tolerance = 1e-5;
+max_iterations = 5000;
+
+% Iterative solution using the Gauss-Seidel method
+for iter = 1:max_iterations
+    T_old = T;
+    
+    for i = 2:Nx-1
+        for j = 2:Ny-1
+            T(i, j) = 0.25 * (T(i+1, j) + T(i-1, j) + T(i, j+1) + T(i, j-1));
+        end
+    end
+    
+    % Check for convergence
+    if max(abs(T - T_old), [], 'all') < tolerance
+        break;
+    end
+end
+
+% Display the results
+[X, Y] = meshgrid(0:dx:Lx, 0:dy:Ly);
+contourf(X, Y, T', 20, 'LineColor', 'none');
+colorbar;
+title('Temperature Distribution in a 2D Copper Plate');
+xlabel('X-axis (m)');
+ylabel('Y-axis (m)');
