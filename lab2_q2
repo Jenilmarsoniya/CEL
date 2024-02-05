@@ -1,0 +1,10 @@
+l = 0;
+
+
+for k = 1:100
+    
+    l = l + k;
+end
+
+
+disp(['The sum of numbers from 1 to 100 is: ' num2str(l)]);
