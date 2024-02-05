@@ -1,0 +1,19 @@
+x = linspace(-5, 5, 1000);
+y1 = x.^2;
+y2 = x.^3;
+y3 = exp(x);
+y4 = sin(x) .* cos(x);
+
+figure;
+plot(x, y1, 'LineWidth', 3, 'DisplayName', 'y = x^2');
+hold on;
+plot(x, y2, 'LineWidth', 3, 'DisplayName', 'y = x^3');
+plot(x, y3, 'LineWidth',3, 'DisplayName', 'y = e^x');
+plot(x, y4, 'LineWidth', 3, 'DisplayName', 'y = sin(x) * cos(x)');
+
+xlabel('x');
+ylabel('y');
+legend('SHOW');
+title('PLOT OF FUNCTION');
+grid on;
+hold off;
