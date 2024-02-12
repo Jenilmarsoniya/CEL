@@ -1,0 +1,29 @@
+% define parameters
+L = 1; % length of the rod (m)
+Nx = 5; % Number of nodes
+dx = L/ (Nx-1) ; % grid spacing
+
+% define the matrix a for finite difference
+A = zeros(Nx,Nx) ;
+A(1,1) = 1 ;
+A(Nx,Nx) = 1 ;
+for i = 2:Nx-1
+    A(i,i-1) = -1 ;
+    A(i,i) = 2 ;
+    A(i,i+1) = -1 ;
+end
+
+% define the vector b for finite differene
+B = zeros(Nx,1) ;
+B(1) = 500 ; % boundry condition at x=0 
+B(Nx) = 100 ; % boundry condition at x=L
+
+% solve for temperature using matrix inverse
+T = inv(A) * B ;
+
+% Plot the temperature distribution
+x = linspace(0, L, Nx) ;
+plot (x, T) ;
+xlabel('Distance (m)');
+ylabel('Temperature (Celsius)') ;
+title('Temperature Disturbution along the distance')
