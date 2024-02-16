@@ -1,0 +1,13 @@
+x = [1.27 0.943 0.8488 0.7489 0.7489 0.6882 0.670 0.652 0.6882];
+y = [34 34 34.5 34.75 35.5 35.75 35.75 36 36.75];
+p = polyfit(x, y, 3);
+x_curve = linspace(min(x), max(x), 100);
+y_curve = polyval(p, x_curve);
+scatter(x, y, 'r'); 
+hold on;
+plot(x_curve, y_curve, 'p');
+xlabel('x');
+ylabel('y');
+title('Parabolic Curve Fitting');
+legend('Data Points', 'Parabolic Curve');
+hold off;
