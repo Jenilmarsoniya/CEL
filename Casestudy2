@@ -1,0 +1,76 @@
+% Define parameters and grid
+L = 1; % Length of the square domain
+Nx = 50; % Number of grid points in x-direction
+Ny = 50; % Number of grid points in y-direction
+dx = L / (Nx - 1); % Grid spacing in x-direction
+dy = L / (Ny - 1); % Grid spacing in y-direction
+x = linspace(0, L, Nx); % Grid points in x-direction
+y = linspace(0, L, Ny); % Grid points in y-direction
+
+% Initial guess for temperature
+T = zeros(Nx, Ny); 
+
+% Boundary conditions (Dirichlet)
+T(:,1) = 100; % Bottom boundary
+T(:,Ny) = 0; % Top boundary
+T(1,:) = 50; % Left boundary
+T(Nx,:) = 75; % Right boundary
+
+% Define the convergence criterion
+tol = 1e-5; % Tolerance for convergence
+max_iter = 10000; % Maximum number of iterations
+
+% Time parameters
+dt = 0.001; % Time step
+max_time = 10; % Maximum simulation time
+
+% Define the heat source parameters
+heat_source_center = [0.5, 0.5]; % Center of the heat source
+heat_source_radius = 0.1; % Radius of the heat source
+heat_source_temperature = 200; % Temperature of the heat source
+
+% Finite difference iteration
+for t = 0:dt:max_time
+    T_old = T;
+    for i = 2:Nx-1
+        for j = 2:Ny-1
+            % Update equation with heat source
+            distance_to_center = sqrt((x(i) - heat_source_center(1))^2 + (y(j) - heat_source_center(2))^2);
+            if distance_to_center <= heat_source_radius
+                T(i, j) = heat_source_temperature;
+            else
+                T(i, j) = 0.25 * (T_old(i+1, j) + T_old(i-1, j) + T_old(i, j+1) + T_old(i, j-1));
+            end
+        end
+    end
+    % Apply boundary conditions (Dirichlet)
+    T(:,1) = 100; % Bottom boundary
+    T(:,Ny) = 0; % Top boundary
+    T(1,:) = 50; % Left boundary
+    T(Nx,:) = 75; % Right boundary
+    
+    % Plot the temperature distribution
+    subplot(2, 1, 1);
+    [X, Y] = meshgrid(x, y);
+    contourf(X, Y, T', 20, 'LineColor', 'none');
+    colorbar;
+    xlabel('X');
+    ylabel('Y');
+    title(['Temperature Distribution at t = ', num2str(t)]);
+    hold on;
+    % Plot heat source as a red circle
+    theta = linspace(0, 2*pi, 100);
+    x_heat = heat_source_center(1) + heat_source_radius * cos(theta);
+    y_heat = heat_source_center(2) + heat_source_radius * sin(theta);
+    plot(x_heat, y_heat, 'r', 'LineWidth', 2);
+    hold off;
+    drawnow; % Update plot
+end
+
+% Plot the temperature profile along the centerline (y = L/2)
+subplot(2, 1, 2);
+plot(x, T(:, Ny/2), 'LineWidth', 2);
+xlabel('X');
+ylabel('Temperature');
+title('Temperature Profile along Centerline (y = L/2)');
+grid on;
