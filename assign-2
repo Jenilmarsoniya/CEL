@@ -1,0 +1,53 @@
+x = [1, 2, 2.5, 3, 4, 5];
+y = [0, 5, 7, 6.5, 2, 0];
+p = 3.4;
+
+% Lagrange interpolation
+n = length(x);
+L = zeros(1, n);
+result = 0;
+
+for i = 1:n
+    % Compute the ith Lagrange basis polynomial at p
+    term = 1;
+    for j = 1:n
+        if j ~= i
+            term = term * (p - x(j)) / (x(i) - x(j));
+        end
+    end
+    L(i) = term;
+    
+    % Compute the interpolated value at p
+    result = result + y(i) * L(i);
+end
+
+result;  % Interpolated value at p
+
+% Plotting for 1st order
+xx1 = linspace(min(x), max(x), 1000);
+yy1 = zeros(size(xx1));
+for k = 1:length(xx1)
+    yy1(k) = y(1) * L(1) + y(2) * L(2);
+end
+
+% Plotting for 2nd order
+xx2 = linspace(min(x), max(x), 1000);
+yy2 = zeros(size(xx2));
+for k = 1:length(xx2)
+    yy2(k) = y(1) * L(1) + y(2) * L(2) + y(3) * L(3);
+end
+
+% Plotting for 3rd order
+xx3 = linspace(min(x), max(x), 1000);
+yy3 = zeros(size(xx3));
+for k = 1:length(xx3)
+    yy3(k) = y(1) * L(1) + y(2) * L(2) + y(3) * L(3) + y(4) * L(4);
+end
+
+figure;
+plot(x, y, '-.', xx1, yy1, 'g', xx2, yy2, 'r', xx3, yy3, 'b');
+xlabel('x');
+ylabel('y');
+title('Lagrange Interpolation');
+legend('Data Points', '1st Order', '2nd Order', '3rd Order');
+grid on;
