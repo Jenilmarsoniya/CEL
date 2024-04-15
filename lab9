@@ -1,0 +1,34 @@
+x = [0.6, 1.5, 1.6, 2.5, 3.5];
+f = [0.9036, 0.3734, 0.3261, 0.08422, 0.01596];
+
+% Forward difference method
+function df = forwardDiff(x, f)
+  n = length(x);
+  df = zeros(n, 1);
+  for i = 1:n-1
+    df(i) = (f(i+1) - f(i)) / (x(i+1) - x(i));
+  end
+  df(end) = (f(end) - f(end-1)) / (x(end) - x(end-1));
+end
+
+% Define the true derivative function
+true_df = @(x) 5*(-2*exp(-2*x) .* x + exp(-2*x));
+
+% Calculate the estimated derivatives using the forward difference method
+df_est = forwardDiff(x, f);
+
+% Calculate the true derivatives
+true_df_x = true_df(x);
+
+% Plot the results
+figure;
+plot(x, df_est, '-b', x, true_df_x, '-');
+xlabel('x');
+ylabel('Derivative');
+legend('Estimated', 'True');
+title('First Derivative Estimates (Forward Difference)');
+
+fprintf('Estimated derivatives (Forward Difference):\n');
+disp(df_est);
+fprintf('True derivatives:\n');
+disp(true_df(x));
