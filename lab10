@@ -1,5 +1,3 @@
-clc; clear all; close all
-
 t0 = input( 'Enter initial time: ');
 t1 = input( 'Enter final time: ');
 step_size = input ('Enter step size: ');
